@@ -369,7 +369,9 @@ bool config_read() {
 			} else 
 			if(strcasecmp(param, "video_out") == 0){
 				if(strlen(line)>0){
-					cfg_video_out = atoi(line);
+					long video_out = strtol(line, NULL, 10);
+					cfg_video_out = (video_out >= 0 && video_out <= MAX_CFG_VIDEO_MODE)
+						? (uint8_t)video_out : DEF_CFG_VIDEO_MODE;
 				} else {
 					cfg_video_out=DEF_CFG_VIDEO_MODE;
 				}

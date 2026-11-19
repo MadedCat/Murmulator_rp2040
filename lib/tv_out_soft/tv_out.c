@@ -70,7 +70,7 @@ typedef struct G_BUFFER{
 	int shift_y;
 	uint8_t* data;
 	uint8_t* overlay;
-	bool (*handler)(int line);	
+	bool (*handler)(short line);
 }G_BUFFER;
 
 
@@ -1076,7 +1076,7 @@ void graphics_set_hud_buffer(uint8_t *buffer){
 	g_buf.overlay = buffer;
 	#endif
 }
-void graphics_set_hud_handler(bool (*handler)()){
+void graphics_set_hud_handler(bool (*handler)(short)){
 	#ifndef SOFT_CVBS_NO_HUD
 	g_buf.handler = handler;
 	#endif

@@ -1,7 +1,7 @@
 #pragma once
 #include "stdio.h"
 #include "screen_util.h"
-#include "config.h"
+#include <config.h>
 
 #define TRDOS_COMPILE
 

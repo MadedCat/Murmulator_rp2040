@@ -1,7 +1,5 @@
 #include <pico.h>
 
-#define VGA_HDMI
-
 // #define PICO_FLASH_SIZE_BYTES (4 * 1024 * 1024)
 
 //#define DEBUG_DELAY
@@ -2432,9 +2430,11 @@ int main(void){
 	#endif
 
 	#ifdef COMPOSITE_TV
-		graphics_init(g_TV_OUT_NTSC);
 		graphics_set_buffer(graph_buf);
+		graphics_set_hud_buffer(hud_line);
+		memset(hud_line, 0x11, SCREEN_W);
 		graphics_set_mode(g_mode_320x240x4bpp);
+		graphics_init(cfg_video_out == g_out_PAL ? g_TV_OUT_PAL : g_TV_OUT_NTSC);
 		for(int i=0;i<16;i++){
 			int I=(i>>3)&1;
 			int G=(i>>2)&1;
@@ -4075,10 +4075,12 @@ int main(void){
 									is_new_screen = true;
 								}
 								if(settings_index==settings_lines-2){
+								#ifdef VGA_HDMI
 									if((g_out)cfg_video_out>g_out_HDMI){
 										cfg_lcd_video_out=cfg_video_out;
 										//printf("Set vout: %d \n",cfg_video_out);
 									}
+								#endif
 									config_save();
 									settings_index = 0;
 									MessageBox("SETTINGS"," ALL SAVED ",CL_LT_YELLOW,CL_BLUE,4);
@@ -4709,17 +4711,21 @@ int main(void){
 				if(current_hud_mode&HM_SHOW_KEYLOCK){
 					if(kbd_lock){
 						if((hud_timer>0)&&(my_millis()-hud_timer)>(SHOW_SCREEN_DELAY*2)){
+							#ifdef VGA_HDMI
 							if(cfg_mobile_mode==MOBILE_MURM_ON){
 								pwm_set_gpio_level(TFT_LED_PIN,0);			//уровень подсветки TFT
 							}
+							#endif
 							printf("Screen OFF\n");
 							hud_timer=0;
 							continue;
 						}
 					} else {
+						#ifdef VGA_HDMI
 						if(cfg_mobile_mode==MOBILE_MURM_ON){
 							pwm_set_gpio_level(TFT_LED_PIN,(TFT_MIN_BRIGHTNESS+(cfg_brightness*10)));			//уровень подсветки TFT
 						}
+						#endif
 						if((hud_timer>0)&&(my_millis()-hud_timer)>(SHOW_SCREEN_DELAY*2)){
 							printf("Screen ON\n");
 							current_hud_mode&=~HM_SHOW_KEYLOCK;
