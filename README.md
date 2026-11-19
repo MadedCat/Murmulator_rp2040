@@ -45,7 +45,7 @@ cmake --build build/m1p1-vga
 
 UF2 появляется в каталоге сборки. Без явного выбора CMake собирает `m2p2-vga-hdmi-tft`. Используйте отдельный каталог сборки для каждого сочетания платы, процессора и видео. SDK использует установленный picotool 2.2.0 или загружает его при сборке.
 
-Для сборки всех 12 UF2 запустите `bash scripts/build-release.sh`. Архив с прошивками, контрольными суммами SHA-256 и справкой появляется в `build/release/`. GitHub Actions собирает такой же архив для `main` и по ручному запуску. Для публикации приложите архив из успешной сборки к релизу соответствующего тега и используйте [RELEASE_NOTES.md](RELEASE_NOTES.md) как текст релиза.
+Для сборки всех 12 UF2 запустите `bash scripts/build-release.sh`. Архив с прошивками, контрольными суммами SHA-256 и справкой появляется в `build/release/`. GitHub Actions собирает такой же архив при обновлении `main`. Кнопка ручного запуска появится, когда `main` станет основной веткой. Для публикации приложите архив из успешной сборки к релизу соответствующего тега и используйте [RELEASE_NOTES.md](RELEASE_NOTES.md) как текст релиза.
 
 ## Авторы
 
@@ -61,4 +61,4 @@ UF2 появляется в каталоге сборки. Без явного �
 
 Choose one of the 12 UF2 files from the [fork releases](https://github.com/DnCraptor/Murmulator_rp2040/releases). Match the board and processor in the first table and choose a video backend in the second table. Copy the UF2 to the drive that appears when you connect the board in BOOTSEL mode. Use Win or Home for the file manager, F12 or Print Screen for the quick menu, and F1 for help. Back up `/murmulator.cfg` before switching video backends, since each backend interprets `video_out` differently.
 
-The build example above uses Pico SDK 2.2.0 and Arm GNU Toolchain. Run `bash scripts/build-release.sh` to package all 12 builds, SHA-256 checksums and both help files. The build workflow uploads the package for each push to `main` and for manual runs.
+The build example above uses Pico SDK 2.2.0 and Arm GNU Toolchain. Run `bash scripts/build-release.sh` to package all 12 builds, SHA-256 checksums and both help files. The build workflow uploads the package for each push to `main`. The manual run button becomes available when `main` is the default branch.
