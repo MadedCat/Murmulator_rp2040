@@ -1,12 +1,27 @@
 #pragma once
-#include "hardware/pio.h"
+#include <pico.h>
+#include <hardware/pio.h>
 
-
-#define TFT_CS_PIN (6) 
+#ifndef TFT_CS_PIN
+#define TFT_CS_PIN (6)
+#endif
+#ifndef TFT_RST_PIN
 #define TFT_RST_PIN (8)
+#endif
+#ifndef TFT_DC_PIN
 #define TFT_DC_PIN (10)
+#endif
+#ifndef TFT_DATA_PIN
 #define TFT_DATA_PIN (12)
+#endif
+#ifndef TFT_CLK_PIN
 #define TFT_CLK_PIN (13)
+#endif
+#ifndef TFT_LED_PIN
+#if TFT_ILI9341 || TFT_ST7789v
+#define TFT_LED_PIN (9)
+#endif
+#endif
 
 #if TFT_ILI9341 || TFT_ST7789v
 	#define TFT_LED_PIN (9)

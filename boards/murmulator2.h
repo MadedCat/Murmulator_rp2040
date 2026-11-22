@@ -5,6 +5,8 @@
 #include "boards/pico.h"
 #endif
 
+#define MURM2
+
 // 16MB flash
 #define PICO_FLASH_SIZE_BYTES 16777216
 // SDCARD
@@ -17,9 +19,36 @@
 #define PS2KBD_GPIO_FIRST 2
 
 // NES Gamepad
-#define NES_GPIO_CLK 20
-#define NES_GPIO_DATA 26
-#define NES_GPIO_LAT 21
+#define D_JOY_CLK_PIN 20
+#define D_JOY_DATA_PIN 26
+#define D_JOY1_DATA_PIN 26
+#define D_JOY2_DATA_PIN 27
+#define D_JOY_LATCH_PIN 21
+
+#define i2c_joy_port (i2c0)
+#define WII_PORT (i2c0)
+
+#define PICO_I2C_JOY_SDA_PIN 0
+#define PICO_I2C_JOY_SCL_PIN 1
+#define WII_SDA_PIN 0
+#define WII_SCL_PIN 1
+
+#define POWER_SDA_PIN (20)
+#define POWER_SCL_PIN (26)
+
+// 74HC595 / AY
+#define LATCH_595_PIN 9
+#define CLK_595_PIN 10
+#define DATA_595_PIN 11
+//#define CLK_AY_PIN1 21
+//#define CLK_AY_PIN2 29
+
+// Misc
+#define PIN_ZX_LOAD 22
+#define ZX_AY_PWM_PIN0 10
+#define ZX_AY_PWM_PIN1 11
+#define ZX_BEEP_PIN 9
+#define WORK_LED_PIN PICO_DEFAULT_LED_PIN
 
 // VGA 8 pins starts from pin:
 #define VGA_BASE_PIN 12

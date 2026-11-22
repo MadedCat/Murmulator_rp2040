@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <pico.h>
 #include "hardware/clocks.h"
 #include "hardware/pwm.h"
 #include "hardware/timer.h"
@@ -32,14 +33,18 @@ void Init_PWM_175(uint8_t tspin_mode){
 	if(!ts_595_enabled){
 		printf("Init 595\n");
 		ts_595_enabled = true;
+#ifdef CLK_AY_PIN1
 		if(tspin_mode==TSPIN_MODE_GP21){
 			PWM_init_pin(CLK_AY_PIN1);
 			pwm_set_gpio_level(CLK_AY_PIN1,2);
 		}
+#endif
+#ifdef CLK_AY_PIN2
 		if(tspin_mode==TSPIN_MODE_GP29){
 			PWM_init_pin(CLK_AY_PIN2);
 			pwm_set_gpio_level(CLK_AY_PIN2,2);
 		}
+#endif
 		gpio_init(CLK_595_PIN);
 		gpio_set_dir(CLK_595_PIN,GPIO_OUT);
 		gpio_init(DATA_595_PIN);
@@ -52,8 +57,12 @@ void Init_PWM_175(uint8_t tspin_mode){
 void Deinit_PWM_175(){
 	if(ts_595_enabled){
 		printf("DeInit 595\n");
+#ifdef CLK_AY_PIN1
 		PWM_deinit_pin(CLK_AY_PIN1);
+#endif
+#ifdef CLK_AY_PIN2
 		PWM_deinit_pin(CLK_AY_PIN2);
+#endif
 		gpio_deinit(CLK_595_PIN);
 		gpio_deinit(DATA_595_PIN);
 		gpio_deinit(LATCH_595_PIN);

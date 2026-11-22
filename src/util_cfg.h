@@ -134,7 +134,11 @@ extern uint8_t cfg_tsspeed_mode;
 extern uint8_t cfg_tschip_order;
 
 
-#define MAX_CFG_VIDEO_MODE 7 
+#ifdef VGA_HDMI
+#define MAX_CFG_VIDEO_MODE 7
+#else
+#define MAX_CFG_VIDEO_MODE 2
+#endif
 #define DEF_CFG_VIDEO_MODE 0
 extern uint8_t cfg_video_out;
 

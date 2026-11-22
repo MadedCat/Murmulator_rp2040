@@ -1,12 +1,18 @@
 #pragma once
 
-#include "inttypes.h"
-#include "stdbool.h"
+#include <pico.h>
+#include <inttypes.h>
+#include <stdbool.h>
 
 #define PIO_VIDEO pio0
 
+#ifndef beginVideo_PIN
+#ifdef VGA_BASE_PIN
+#define beginVideo_PIN (VGA_BASE_PIN)
+#else
 #define beginVideo_PIN (6)
-
+#endif
+#endif
 
 typedef enum g_mode_t{
     g_mode_320x240x8bpp,
@@ -57,7 +63,7 @@ bool graphics_try_framerate(g_out v_out,fr_rate rate, bool apply);
 void graphics_init();
 void graphics_set_buffer(uint8_t *buffer);
 void graphics_set_hud_buffer(uint8_t *buffer);
-void graphics_set_hud_handler(bool (*handler)());
+void graphics_set_hud_handler(bool (*handler)(short));
 void graphics_set_mode(tv_out_mode_t mode);
 tv_out_mode_t graphics_get_default_mode(g_out video_out);
 void graphics_set_palette(uint8_t i, uint32_t color888);

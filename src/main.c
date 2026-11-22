@@ -1,6 +1,4 @@
-#define PICO_FLASH_SPI_CLKDIV 4
-
-#define VGA_HDMI
+#include <pico.h>
 
 // #define PICO_FLASH_SIZE_BYTES (4 * 1024 * 1024)
 
@@ -48,14 +46,23 @@
 
 #define TIMER_PERIOD 500 //ms
 
-
+#ifndef PIN_ZX_LOAD
 #define PIN_ZX_LOAD (22)
+#endif
 
+#ifndef ZX_AY_PWM_PIN0
 #define ZX_AY_PWM_PIN0 (26)
+#endif
+#ifndef ZX_AY_PWM_PIN1
 #define ZX_AY_PWM_PIN1 (27)
+#endif
+#ifndef ZX_BEEP_PIN
 #define ZX_BEEP_PIN (28)
+#endif
 
+#ifndef WORK_LED_PIN
 #define WORK_LED_PIN (25)
+#endif
 
 //#define TST_PIN (29)
 
@@ -214,7 +221,7 @@ short int settings_lines=0;
 short int menu_inc_dec=0;
 
 bool is_pause_mode=false;
-bool i2cKbdMode;
+bool i2cKbdMode=false;
 bool keyPressed;
 uint8_t i2cBtnPressed = 0;
 
@@ -951,7 +958,13 @@ uint8_t EditDialogBox(char *header,char *message,char *value,uint8_t colorFG,uin
 			do{
 				if(strlen(iface_btn[di_id][max_btn])>1){
 					pos-=strlen(iface_btn[di_id][max_btn])*FONT_W;
-					draw_text(pos,left_y+(FONT_H*3),iface_btn[di_id][max_btn],COLOR_TEXT,(dia_pos-value_len)==max_btn?COLOR_CURRENT_BG:COLOR_BACKGOUND);
+					draw_text(
+						pos,
+						left_y+(FONT_H*3),
+						iface_btn[di_id][max_btn],
+						COLOR_TEXT,
+						(dia_pos-value_len)==max_btn?COLOR_CURRENT_BG:COLOR_BACKGOUND
+					);
 				}
 				max_btn--;
 			} while(max_btn>=0);
@@ -1887,15 +1900,17 @@ void input_init(){
 	}else{
 		joy_connected = false;
 	}
-	
+#ifndef MURM2	
 	if (i2c_kbd_start()){i2cKbdMode = true;}else{i2cKbdMode = false;}
 
 	short int i2c_state = i2c_kbd_data_in();
 	//printf ("i2c_state: %d\n",i2c_state);
-
+#endif
 	if(!i2cKbdMode) {
+#ifndef MURM2	
 		//printf ("i2c Keyboard not connected\n");
-		i2c_kbd_deinit();	
+		i2c_kbd_deinit();
+#endif
 		busy_wait_ms(100);
 		start_PS2_capture();
 		printf ("PS/2 Keyboard Started\n");
@@ -2044,12 +2059,40 @@ void draw_flakes(){
 }
 */
 
+#ifndef PICO_RP2040
+#include <hardware/regs/qmi.h>
+#include <hardware/structs/qmi.h>
+void __not_in_flash_func(flash_timings)(int mhz) {
+        const int max_flash_freq = 66 * MHZ;
+        const int clock_hz = mhz * MHZ;
+        int divisor = (clock_hz + max_flash_freq - 1) / max_flash_freq;
+        if (divisor == 1 && clock_hz > 100000000) {
+            divisor = 2;
+        }
+        int rxdelay = divisor;
+        if (clock_hz / divisor > 100000000) {
+            rxdelay += 1;
+        }
+        qmi_hw->m[0].timing = 0x60007000 |
+                            rxdelay << QMI_M0_TIMING_RXDELAY_LSB |
+                            divisor << QMI_M0_TIMING_CLKDIV_LSB;
+}
+#endif
+
 int main(void){
 	//vreg_set_voltage(VREG_VOLTAGE_1_20);//def
 	vreg_set_voltage(VREG_VOLTAGE_1_30);
 	//vreg_set_voltage(VREG_VOLTAGE_1_25);
-	
 	busy_wait_ms(100);
+#if !PICO_RP2040
+	#ifdef VGA_HDMI
+	    flash_timings(315);
+	#else
+		#if COMPOSITE_TV||SOFT_COMPOSITE_TV
+			flash_timings(378);
+		#endif
+	#endif
+#endif
 	/*
 		вот эти пробуй:280, 288, 290400, 296, 297, 300
 		дальше такие:302400, 303, 304800, 306, 307, 308, 309600, 312, 314400, 315, 316, 316800
@@ -2387,9 +2430,11 @@ int main(void){
 	#endif
 
 	#ifdef COMPOSITE_TV
-		graphics_init(g_TV_OUT_NTSC);
 		graphics_set_buffer(graph_buf);
+		graphics_set_hud_buffer(hud_line);
+		memset(hud_line, 0x11, SCREEN_W);
 		graphics_set_mode(g_mode_320x240x4bpp);
+		graphics_init(cfg_video_out == g_out_PAL ? g_TV_OUT_PAL : g_TV_OUT_NTSC);
 		for(int i=0;i<16;i++){
 			int I=(i>>3)&1;
 			int G=(i>>2)&1;
@@ -4030,10 +4075,12 @@ int main(void){
 									is_new_screen = true;
 								}
 								if(settings_index==settings_lines-2){
+								#ifdef VGA_HDMI
 									if((g_out)cfg_video_out>g_out_HDMI){
 										cfg_lcd_video_out=cfg_video_out;
 										//printf("Set vout: %d \n",cfg_video_out);
 									}
+								#endif
 									config_save();
 									settings_index = 0;
 									MessageBox("SETTINGS"," ALL SAVED ",CL_LT_YELLOW,CL_BLUE,4);
@@ -4664,17 +4711,21 @@ int main(void){
 				if(current_hud_mode&HM_SHOW_KEYLOCK){
 					if(kbd_lock){
 						if((hud_timer>0)&&(my_millis()-hud_timer)>(SHOW_SCREEN_DELAY*2)){
+							#ifdef VGA_HDMI
 							if(cfg_mobile_mode==MOBILE_MURM_ON){
 								pwm_set_gpio_level(TFT_LED_PIN,0);			//уровень подсветки TFT
 							}
+							#endif
 							printf("Screen OFF\n");
 							hud_timer=0;
 							continue;
 						}
 					} else {
+						#ifdef VGA_HDMI
 						if(cfg_mobile_mode==MOBILE_MURM_ON){
 							pwm_set_gpio_level(TFT_LED_PIN,(TFT_MIN_BRIGHTNESS+(cfg_brightness*10)));			//уровень подсветки TFT
 						}
+						#endif
 						if((hud_timer>0)&&(my_millis()-hud_timer)>(SHOW_SCREEN_DELAY*2)){
 							printf("Screen ON\n");
 							current_hud_mode&=~HM_SHOW_KEYLOCK;

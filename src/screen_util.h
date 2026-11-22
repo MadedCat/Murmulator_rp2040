@@ -71,8 +71,8 @@ color:
 typedef uint8_t color_t;
 
 bool draw_pixel(int x,int y,color_t color);
-void draw_text(int x,int y,char* text,color_t colorText,color_t colorBg);
-void draw_text_len(int x,int y,char* text,color_t colorText,color_t colorBg,int len);
+void draw_text(int x,int y,const char* text,color_t colorText,color_t colorBg);
+void draw_text_len(int x,int y,const char* text,color_t colorText,color_t colorBg,int len);
 void draw_line(int x0,int y0, int x1, int y1,color_t color);
 //void draw_circle(int x0,int y0,  int r,color_t color);
 void init_screen(uint8_t* scr_buf,int scr_width,int scr_height);

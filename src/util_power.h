@@ -1,6 +1,7 @@
 #pragma once
 #include "inttypes.h"
 #include <stdlib.h>
+#include <pico.h>
 #include "time.h"
 #include "inttypes.h"
 #include "stdbool.h"
@@ -12,8 +13,10 @@
 
 #define POWER_PORT (i2c1)
 #define POWER_CLOCK (400000)
+#ifndef POWER_SDA_PIN
 #define POWER_SDA_PIN (14)
 #define POWER_SCL_PIN (15)
+#endif
 
 #define POWER_BYTE_COUNT 4
 

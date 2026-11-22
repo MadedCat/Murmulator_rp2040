@@ -86,7 +86,7 @@ int conv_utf_w1251(char *utf8, char* windows1251, size_t n){
 	return 1;
 }
 
-int conv_utf_cp866(char *utf8, char* cp866, size_t n){
+int conv_utf_cp866(const char *utf8, char* cp866, size_t n){
 	int i = 0;
 	int j = 0;
 	for(; i < (int)n && utf8[i] != 0; ++i){

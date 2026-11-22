@@ -316,7 +316,7 @@ int sd_read_file(FIL *file,void* buffer, UINT bytestoread, UINT* bytesreaded){
 	return f_read(file,buffer,bytestoread,bytesreaded);
 }
 
-int sd_write_file(FIL *file,void* buffer, UINT bytestowrite, UINT* byteswrited){
+int sd_write_file(FIL *file, const void* buffer, UINT bytestowrite, UINT* byteswrited){
 	return f_write(file,buffer,bytestowrite,byteswrited);
 }
 

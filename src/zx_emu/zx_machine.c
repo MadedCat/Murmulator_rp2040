@@ -397,10 +397,10 @@ void zx_machine_init(){
 	//zx_rom_bank[1]=&ROM[2*ZX_RAM_PAGE_SIZE];//128k
 	
 	/*main rom config*/
-	zx_rom_bank[0]=&ROM_PENTAGON[1*ZX_RAM_PAGE_SIZE];//48k		   //&turbo48_rom;//48k
-	zx_rom_bank[1]=&ROM_PENTAGON[0*ZX_RAM_PAGE_SIZE];//128k с пунктом меню "TR-DOS"
-	zx_rom_bank[2]=&ROM[1*ZX_RAM_PAGE_SIZE];//TRDOS
-	zx_rom_bank[3]=&ROM[0*ZX_RAM_PAGE_SIZE];//GLUK
+	zx_rom_bank[0]=(uint8_t*)&ROM_PENTAGON[1*ZX_RAM_PAGE_SIZE];//48k		   //&turbo48_rom;//48k
+	zx_rom_bank[1]=(uint8_t*)&ROM_PENTAGON[0*ZX_RAM_PAGE_SIZE];//128k с пунктом меню "TR-DOS"
+	zx_rom_bank[2]=(uint8_t*)&ROM[1*ZX_RAM_PAGE_SIZE];//TRDOS
+	zx_rom_bank[3]=(uint8_t*)&ROM[0*ZX_RAM_PAGE_SIZE];//GLUK
 
 	/*main rom config*/
 	/*experimental rom config*/
@@ -457,7 +457,7 @@ void zx_machine_init(){
 	
 	//инициализация процессора
 	
-	z80_init(&cpu);
+	z80_init((z80*)&cpu);
 	cpu.read_byte = read_z80;   // Присваиваем процедуру read_z80 структуре z80 (Процедура cpu.readbyte)
 	cpu.write_byte = write_z80; // Аналогично
 	cpu.port_in = in_z80;	   // Аналогично
@@ -470,7 +470,7 @@ void zx_machine_init(){
 void zx_machine_reset(bool trdos){
 
 	memset(&RAM[0],0x00,ZX_RAM_PAGE_SIZE*ZX_RAM_PAGES);
-	z80* z=&cpu;
+	z80* z= (z80*)&cpu;
 	// z->cyc = 0;
 
 	TRDOS_mode = false;	 // Текущий режим - ROM TRDOS или стандартный ROM 48k
@@ -884,7 +884,7 @@ void FAST_FUNC(zx_machine_main_loop_start)(){
 		
 		t0_time_ticks=(t0_time_ticks+d_dst_time_ticks)&0xffffff;		 
 		tick_cpu=cpu.cyc;				 // Запоминаем количество тактов Z80 до выполнения команды Z80
-		z80_step(&cpu);				   // Выполняем очередню команду Z80
+		z80_step((z80*)&cpu);				   // Выполняем очередню команду Z80
 		dt_cpu=cpu.cyc-tick_cpu; // Вычисляем количество тактов Z80 на выполненную команду.
 		d_dst_time_ticks=dt_cpu*ticks_per_cycle; // Расчетное количесто тактов реального процессора на воплненную команду Z80
 		inx_tick_screen+=dt_cpu;		  //Увеличиваем на количество тактов Z80 на текущую выполненную команду.
@@ -911,7 +911,7 @@ void FAST_FUNC(zx_machine_main_loop_start)(){
 
 		if (inx_tick_screen>=ticks_per_frame){	   // Если прошла 1/50 сек, 71680 тактов процессора Z80
 			int_en=true;
-			z80_gen_int(&cpu,0xFF);
+			z80_gen_int((z80*)&cpu,0xFF);
 			inx_tick_screen-=ticks_per_frame; //Такты Z80 1/50 секунды
 			//start_menu_tick();
 			x=0;y=0;
@@ -929,7 +929,7 @@ void FAST_FUNC(zx_machine_main_loop_start)(){
 
 		// Если нажаликлавишу NMI
 		if (z80_gen_nmi_from_main){
-			z80_gen_nmi(&cpu);
+			z80_gen_nmi((z80*)&cpu);
 			z80_gen_nmi_from_main = false;
 		}
 

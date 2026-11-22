@@ -222,7 +222,7 @@ void  start_PS2_capture(){
    
     channel_config_set_chain_to(&c0, dma_chan1);                      
 
-    uint32_t* addr_read_dma= &pio_ps2->rxf[sm_ps2];
+    uint32_t* addr_read_dma= (uint32_t*)&pio_ps2->rxf[sm_ps2];
 
     dma_channel_configure(
         dma_chan0,

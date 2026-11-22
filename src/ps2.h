@@ -1,13 +1,25 @@
 #pragma once
-#include "inttypes.h"
+#include <inttypes.h>
 #include <stdio.h>
+#include <pico.h>
+#include <hardware/pio.h>
 #include "kb_u_codes.h"
 
-//#include "inttypes.h"
-#include "hardware/pio.h"
-
-#define PIN_PS2_DATA (1)
+#ifndef PIN_PS2_CLK
+#ifdef PS2KBD_GPIO_FIRST
+#define PIN_PS2_CLK (PS2KBD_GPIO_FIRST)
+#else
 #define PIN_PS2_CLK (0)
+#endif
+#endif
+
+#ifndef PIN_PS2_DATA
+#ifdef PS2KBD_GPIO_FIRST
+#define PIN_PS2_DATA (PS2KBD_GPIO_FIRST + 1)
+#else
+#define PIN_PS2_DATA (1)
+#endif
+#endif
 
 #define KB_PS_2_CMD_RESET (0xFF)
 #define KB_PS_2_CMD_SET_LED (0xED)

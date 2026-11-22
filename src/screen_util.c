@@ -30,7 +30,7 @@ bool draw_pixel (int x,int y,color_t color){
 	return true;
 }
 
-void draw_text(int x,int y,char* text,color_t colorText,color_t colorBg){
+void draw_text(int x,int y,const char* text,color_t colorText,color_t colorBg){
 	if(strlen(text)==0) return;
 	for(int line=0;line<FONT_H;line++){
 		uint8_t* symb=(uint8_t*)text;
@@ -47,7 +47,7 @@ void draw_text(int x,int y,char* text,color_t colorText,color_t colorBg){
 	}
 }
 
-void draw_text_len(int x,int y,char* text,color_t colorText,color_t colorBg,int len){
+void draw_text_len(int x,int y,const char* text,color_t colorText,color_t colorBg,int len){
 	if(strlen(text)==0) return;
 	//printf("text[%s]\t",text);
 

@@ -6,8 +6,12 @@
 #define i2c_port (i2c0)
 #define CLOCK_I2C_kHz (400)
 #define I2C_ADDRESS (0x20)
-#define PICO_I2C_SDA_PIN (0)
-#define PICO_I2C_SCL_PIN (1)
+#ifndef PICO_I2C_SDA_PIN
+#define PICO_I2C_SDA_PIN (PS2KBD_GPIO_FIRST)
+#endif
+#ifndef PICO_I2C_SCL_PIN
+#define PICO_I2C_SCL_PIN (PS2KBD_GPIO_FIRST + 1)
+#endif
 #define MAX_QNT_DEVICES (8)
 #define KEY_ARRAY_SIZE (12)
 

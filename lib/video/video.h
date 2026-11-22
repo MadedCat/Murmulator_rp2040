@@ -1,48 +1,25 @@
 #pragma once
 
-#include "inttypes.h"
-#include "stdbool.h"
+#include <pico.h>
+#include <inttypes.h>
+#include <stdbool.h>
 
 #define PIO_VIDEO pio0
 #define PIO_VIDEO_ADDR pio0
 
+#ifndef beginVideo_PIN
+#ifdef VGA_BASE_PIN
+#define beginVideo_PIN (VGA_BASE_PIN)
+#else
 #define beginVideo_PIN (6)
+#endif
+#endif
 
 #define HDMI_PIN_invert_diffpairs (1)
 #define HDMI_PIN_RGB_notBGR (1)
 
 #define beginHDMI_PIN_data (beginVideo_PIN+2)
 #define beginHDMI_PIN_clk (beginVideo_PIN)
-
-/*
-#ifndef TFT_DATA_PIN
-	#define TFT_DATA_PIN	(6)
-#endif
-#ifndef TFT_DC_PIN
-	#define TFT_DC_PIN		(7)
-#endif
-#ifndef TFT_CS_PIN
-	#define TFT_CS_PIN		(8) 
-#endif
-#ifndef TFT_CLK_PIN
-	#define TFT_CLK_PIN		(9)
-#endif
-
-#ifndef TFT_RST_PIN
-	#define TFT_RST_PIN		(10)
-#endif
-#ifndef TFT_LED_PIN
-	#define TFT_LED_PIN		(13)
-#endif
-*/
-/*
-#define TFT_CS_PIN		(6)
-#define TFT_RST_PIN		(8)
-#define TFT_LED_PIN		(9)
-#define TFT_DC_PIN		(10)
-#define TFT_DATA_PIN	(12)
-#define TFT_CLK_PIN		(13) 
-*/
 
 #define RGB888(r, g, b) ((r<<16) | (g << 8 ) | b )
 
@@ -90,5 +67,3 @@ void graphics_set_palette(uint8_t i, uint32_t color888);
 void graphics_set_rotate(rotate degree);
 void graphics_set_inversion(bool inversion);
 void graphics_set_pixels(uint8_t pixels);
-//void graphics_update_screen();
-//void TFT_clr_scr(const uint16_t color);

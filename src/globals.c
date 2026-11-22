@@ -32,8 +32,10 @@ bool zx_screen_refresh;
 
 
 #ifndef DEBUG_DISABLE_LOADERS
-    __scratch_x("temp_data_x") uint8_t temp_buffer_x[TEMP_BUFF_SIZE_X];
-    __scratch_y("temp_data_y") uint8_t temp_buffer_y[TEMP_BUFF_SIZE_Y];
+    ///__scratch_x("temp_data_x")
+     uint8_t temp_buffer_x[TEMP_BUFF_SIZE_X];
+    ///__scratch_y("temp_data_y")
+     uint8_t temp_buffer_y[TEMP_BUFF_SIZE_Y];
 #endif
 
 

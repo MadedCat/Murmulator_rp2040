@@ -44,7 +44,7 @@ char* get_lfn_from_dir(char *dir_name,FileRec* short_name);
 
 int sd_open_file(FIL *file, char* file_name, BYTE mode);
 int sd_read_file(FIL *file, void* buffer, unsigned int bytestoread, unsigned int* bytesreaded);
-int sd_write_file(FIL *file,void* buffer, UINT bytestowrite, UINT* byteswrited);
+int sd_write_file(FIL *file, const void* buffer, UINT bytestowrite, UINT* byteswrited);
 int sd_flush_file(FIL *file);
 int sd_seek_file(FIL *file, FSIZE_t offset);
 int sd_close_file(FIL *file);

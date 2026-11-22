@@ -1,10 +1,20 @@
 #pragma once
-#include "inttypes.h"
+#include <pico.h>
+#include <inttypes.h>
 
+#ifndef WII_PORT
 #define WII_PORT (i2c1)
+#endif
 #define WII_CLOCK (100000) //4000
-#define WII_SDA_PIN (14)	//D_JOY_CLK_PIN (14)
-#define WII_SCL_PIN (15)	//D_JOY_LATCH_PIN (15)
+
+#ifndef WII_SDA_PIN
+#define WII_SDA_PIN (14)
+#endif
+
+#ifndef WII_SCL_PIN
+#define WII_SCL_PIN (15)
+#endif
+
 #define WII_ADDRESS 0x52
 #define WII_BYTE_COUNT (21)
 #define WII_CONFIG_COUNT (21)

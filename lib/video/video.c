@@ -189,7 +189,7 @@ typedef struct G_BUFFER{
 
 typedef struct ALLOWED_MODE{
 	g_out video_out;
-	V_MODE* video_mode;
+	const V_MODE* video_mode;
 }ALLOWED_MODE;
 
 //640x480x60 - vga
@@ -1114,7 +1114,7 @@ g_out graphics_test_output(){
 	for(uint8_t rep=0;rep<5;rep++){
 		readings=0;
 		for(uint8_t idx=beginVideo_PIN;idx<(beginVideo_PIN+6);idx++){
-			readings|=((uint8_t)gpio_get(idx))<<(idx-6);
+			readings|=((uint8_t)gpio_get(idx))<<(idx-beginVideo_PIN);
 		}
 		sleep_ms(10);
 		pull_up+=readings;
@@ -1136,7 +1136,7 @@ g_out graphics_test_output(){
 	for(uint8_t rep=0;rep<5;rep++){
 		readings=0;
 		for(uint8_t idx=beginVideo_PIN;idx<(beginVideo_PIN+6);idx++){
-			readings|=((uint8_t)gpio_get(idx))<<(idx-6);
+			readings|=((uint8_t)gpio_get(idx))<<(idx-beginVideo_PIN);
 		}
 		sleep_ms(10);
 		pull_down+=readings;
